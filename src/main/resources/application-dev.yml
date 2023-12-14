@@ -1,0 +1,96 @@
+server:
+  port: 8080
+  reactive:
+    session:
+      timeout: 600
+
+logging:
+  level:
+    root: info
+    org.mybatis: debug
+    java.sql: debug
+    org.springframework.web: trace
+    io.github.jiangdequan.infrastructure.repository.mapper: trace
+  savetime: 90
+  dir: /home/jiangdequan/app/applog
+
+http:
+  connectTimeout: 10000
+  readTimeout: 60000
+  requestTimeout: 1000
+  maxPool: 20
+  maxPerRoot: 5
+
+##数据源相关
+spring:
+  datasource:
+    druid:
+      url: jdbc:h2:~/h2_test_db
+      username: sa
+      password: 123456
+      driver-class-name: org.h2.Driver
+      initial-size: 5
+      max-active: 20
+      min-idle: 5
+      max-wait: 20000
+      pool-prepared-statements: false
+      max-pool-prepared-statement-per-connection-size: -1
+      validation-query: SELECT 1 FROM DUAL
+      validation-query-timeout: 1
+      test-on-borrow: false
+      test-on-return: false
+      test-while-idle: true
+      time-between-eviction-runs-millis: 6000
+      min-evictable-idle-time-millis: 21000
+      max-evictable-idle-time-millis: 30000
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  cache:
+    type: ehcache
+    ehcache:
+      config: classpath:ehcache.xml
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  support-methods-arguments: true
+  params: count=countsql
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+    show-extensions: true
+  api-docs:
+    path: /v3/api-docs
+    enabled: true
+  # 分组
+  group-configs:
+    - group: '演示系统'
+      paths-to-match: '/**'
+      packages-to-scan: io.github.jiangdequan
+knife4j:
+  enable: true
+  production: false
+  setting:
+    language: zh_cn
+    swagger-model-name: 实体类列表
+  documents:
+    - group: 演示系统
+      name: 工程说明文档
+      locations: classpath:README.md

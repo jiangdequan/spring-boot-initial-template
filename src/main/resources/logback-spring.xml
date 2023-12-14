@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- scan 自动加载配置开启  scanPeriod扫描时间间隔60s debug查看logback运行日志-->
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
+    <!-- 参数常量-->
+    <contextName>demo</contextName>
+    <!-- trace<debug<info<warn<error-->
+    <springProperty scope="context" name="log.level" source="logging.level.root" defaultValue="INFO"/>
+
+    <springProperty scope="context" name="log.path" source="logging.dir" defaultValue="/opt/applog"/>
+
+    <!-- 日志输出格式-->
+    <springProperty scope="context" name="log.pattern" source="logging.pattern"
+                    defaultValue="%d{yyyy-MM-dd HH:mm:ss.SSS} %contextName [%thread] %-5level %logger{50} - %msg%n"/>
+
+    <!--控制台-->
+    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度 %logger输出日志的logger名 %msg：日志消息，%n是换行符 -->
+            <pattern>${log.pattern}</pattern>
+            <!--解决乱码问题-->
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!--滚动文件-->
+    <appender name="infoFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.path}/app_root.log</file>
+        <!-- ThresholdFilter:临界值过滤器，过滤掉 TRACE 和 DEBUG 级别的日志 -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.path}/app_root.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!--保存最近30天的日志-->
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>${log.pattern}</pattern>
+        </encoder>
+    </appender>
+
+    <root level="info">
+        <appender-ref ref="stdout"/>
+        <appender-ref ref="infoFile"/>
+    </root>
+
+</configuration>
